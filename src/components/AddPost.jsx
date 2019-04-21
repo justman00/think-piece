@@ -1,40 +1,44 @@
-import React, { Component } from 'react'
-import { firestore } from '../firebase'
+import React, { Component } from "react";
+import { firestore } from "../firebase";
+import { auth } from "../firebase";
 
 class AddPost extends Component {
-  state = { title: '', content: '' }
+  state = { title: "", content: "" };
 
   handleChange = event => {
-    const { name, value } = event.target
-    this.setState({ [name]: value })
-  }
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
 
   handleSubmit = event => {
-    event.preventDefault()
+    event.preventDefault();
 
-    const { title, content } = this.state
+    const { title, content } = this.state;
+    const { uid, displayName, email, photoURL } = auth.currentUser || {};
 
     const post = {
       title,
       content,
       user: {
-        uid: '1111',
-        displayName: 'Steve Kinney',
-        email: 'steve@mailinator.com',
-        photoURL: 'http://placekitten.com/g/200/200'
+        uid,
+        displayName,
+        email,
+        photoURL
       },
       favorites: 0,
       comments: 0,
       createdAt: new Date()
-    }
+    };
 
-    firestore.collection('posts').add(post)
+    console.log(post);
 
-    this.setState({ title: '', content: '' })
-  }
+    firestore.collection("posts").add(post);
+
+    this.setState({ title: "", content: "" });
+  };
 
   render() {
-    const { title, content } = this.state
+    const { title, content } = this.state;
     return (
       <form onSubmit={this.handleSubmit} className="AddPost">
         <input
@@ -53,8 +57,8 @@ class AddPost extends Component {
         />
         <input className="create" type="submit" value="Create Post" />
       </form>
-    )
+    );
   }
 }
 
-export default AddPost
+export default AddPost;
