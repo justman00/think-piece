@@ -1,21 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
 class AddComment extends Component {
-  state = { content: '' };
+  state = { content: '' }
 
   handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
+    const { name, value } = event.target
+    this.setState({ [name]: value })
+  }
 
   handleSubmit = event => {
-    event.preventDefault();
+    event.preventDefault()
 
-    this.setState({ content: '' });
-  };
+    this.props.onCreate(this.state)
+
+    this.setState({ content: '' })
+  }
 
   render() {
-    const { content } = this.state;
+    const { content } = this.state
     return (
       <form onSubmit={this.handleSubmit} className="AddComment">
         <input
@@ -27,8 +29,8 @@ class AddComment extends Component {
         />
         <input className="create" type="submit" value="Create Comment" />
       </form>
-    );
+    )
   }
 }
 
-export default AddComment;
+export default AddComment

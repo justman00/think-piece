@@ -1,19 +1,28 @@
-import React from 'react'
-
+import React, { useContext } from 'react'
+import { UserContext } from '../providers/UserProvider'
 import moment from 'moment'
-
+import { Link } from 'react-router-dom'
 import { firestore } from '../firebase'
 
-const Post = ({ title, content, user, createdAt, stars, comments, id }) => {
-  const postRef = firestore.doc(`posts/${id}`)
+const belongsToCurrentUser = (currentUser, postAuthor) => {
+  if (!currentUser) return false
 
+  return currentUser.uid === postAuthor.uid
+}
+
+const Post = ({ title, content, user, createdAt, stars, comments, id }) => {
+  const currentUser = useContext(UserContext)
+
+  const postRef = firestore.doc(`posts/${id}`)
   const star = () => postRef.update({ stars: ++stars })
   const remove = () => postRef.delete()
 
   return (
     <article className="Post">
       <div className="Post--content">
-        <h3>{title}</h3>
+        <Link to={`/posts/${id}`}>
+          <h3>{title}</h3>
+        </Link>
         <div>{content}</div>
       </div>
       <div className="Post--meta">
@@ -37,9 +46,11 @@ const Post = ({ title, content, user, createdAt, stars, comments, id }) => {
           <button onClick={star} className="star">
             Star
           </button>
-          <button onClick={() => remove()} className="delete">
-            Delete
-          </button>
+          {belongsToCurrentUser(currentUser, user) && (
+            <button onClick={() => remove()} className="delete">
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </article>

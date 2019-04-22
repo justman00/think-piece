@@ -1,73 +1,70 @@
-import firebase from "firebase/app";
-import "firebase/firestore";
-import "firebase/auth";
+import firebase from 'firebase/app'
+import 'firebase/firestore'
+import 'firebase/auth'
+import 'firebase/storage'
 
 const config = {
-  apiKey: "AIzaSyA890g6BXw04Z_bW5RjKix0i2ODTMSRFb0",
-  authDomain: "think-piece-vlad.firebaseapp.com",
-  databaseURL: "https://think-piece-vlad.firebaseio.com",
-  projectId: "think-piece-vlad",
-  storageBucket: "think-piece-vlad.appspot.com",
-  messagingSenderId: "350245086528"
-};
+  apiKey: 'AIzaSyA890g6BXw04Z_bW5RjKix0i2ODTMSRFb0',
+  authDomain: 'think-piece-vlad.firebaseapp.com',
+  databaseURL: 'https://think-piece-vlad.firebaseio.com',
+  projectId: 'think-piece-vlad',
+  storageBucket: 'think-piece-vlad.appspot.com',
+  messagingSenderId: '350245086528'
+}
 
-firebase.initializeApp(config);
+firebase.initializeApp(config)
 
-export const firestore = firebase.firestore();
-export const auth = firebase.auth();
+export const firestore = firebase.firestore()
+export const auth = firebase.auth()
+export const storage = firebase.storage()
 
-export const provider = new firebase.auth.GoogleAuthProvider();
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export const provider = new firebase.auth.GoogleAuthProvider()
+export const signInWithGoogle = () => auth.signInWithPopup(provider)
 
-const settings = { timestampsInSnapshots: true };
-firestore.settings(settings);
+const settings = { timestampsInSnapshots: true }
+firestore.settings(settings)
 
 // just for showing off
-window.firebase = firebase;
+window.firebase = firebase
 
 // for adding data when creating a user with email and password
 export const createUserProfileDocument = async (user, additionalData) => {
-  if (!user) return;
+  if (!user) return
 
   // get a reference to the place in the database where a user profile might be
-  const userRef = firestore.doc(`users/${user.uid}`);
+  const userRef = firestore.doc(`users/${user.uid}`)
 
   // go and fetch the document from the location
-  const snapshot = await userRef.get();
+  const snapshot = await userRef.get()
 
   if (!snapshot.exists) {
-    const { email, displayName, photoUrl } = user;
-    const createdAt = new Date();
+    const { email, displayName, photoURL } = user
+    const createdAt = new Date()
 
     try {
       await userRef.set({
         displayName,
         email,
-        photoUrl,
+        photoURL,
         createdAt,
         ...additionalData
-      });
+      })
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
-  return getUserDocument(user.uid);
-};
+  return getUserDocument(user.uid)
+}
 
 export const getUserDocument = async uid => {
-  if (!uid) return null;
+  if (!uid) return null
 
   try {
-    const userDocument = await firestore
-      .collection("users")
-      .doc(uid)
-      .get();
-
-    return { uid, ...userDocument.data() };
+    return firestore.collection('users').doc(uid)
   } catch (error) {
-    console.error(error.message);
+    console.error(error.message)
   }
-};
+}
 
-export default firebase;
+export default firebase

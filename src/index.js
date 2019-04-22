@@ -1,17 +1,20 @@
-import React from "react";
-import { render } from "react-dom";
-import PostsProvider from "./providers/PostsProvider";
-import UserProvider from "./providers/UserProvider";
+import React from 'react'
+import { render } from 'react-dom'
+import PostsProvider from './providers/PostsProvider'
+import UserProvider from './providers/UserProvider'
+import { BrowserRouter as Router } from 'react-router-dom'
 
-import "./index.scss";
+import './index.scss'
 
-import Application from "./components/Application";
+import Application from './components/Application'
 
 render(
-  <PostsProvider>
-    <UserProvider>
-      <Application />
-    </UserProvider>
-  </PostsProvider>,
-  document.getElementById("root")
-);
+  <Router>
+    <PostsProvider>
+      <UserProvider>
+        <Application />
+      </UserProvider>
+    </PostsProvider>
+  </Router>,
+  document.getElementById('root')
+)
